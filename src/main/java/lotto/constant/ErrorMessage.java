@@ -21,7 +21,7 @@ public enum ErrorMessage {
     private final String message;
 
     ErrorMessage(String message) {
-        this.message = "[ERROR] " + message;
+        this.message = Constants.ERROR_PREFIX + message;
     }
 
     public String getMessage() {

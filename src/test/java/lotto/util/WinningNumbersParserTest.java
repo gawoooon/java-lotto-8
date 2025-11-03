@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
+import lotto.constant.Constants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class WinningNumbersParserTest {
-    private static final String ERROR_MESSAGE = "[ERROR]";
 
     @Nested
     @DisplayName("정상 케이스")
@@ -48,7 +48,7 @@ class WinningNumbersParserTest {
         void inner_space_not_allowed(String input) {
             assertThatThrownBy(() -> WinningNumbersParser.parse(input))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageStartingWith(ERROR_MESSAGE);
+                    .hasMessageStartingWith(Constants.ERROR_PREFIX);
         }
 
         @ParameterizedTest(name = "숫자 외 문자 금지: \"{0}\"")
@@ -56,7 +56,7 @@ class WinningNumbersParserTest {
         void non_digit_is_not_allowed(String input) {
             assertThatThrownBy(() -> WinningNumbersParser.parse(input))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageStartingWith(ERROR_MESSAGE);
+                    .hasMessageStartingWith(Constants.ERROR_PREFIX);
         }
 
         @ParameterizedTest(name = "쉼표 개수/배치 오류: \"{0}\"")
@@ -64,7 +64,7 @@ class WinningNumbersParserTest {
         void wrong_separator_count_or_position(String input) {
             assertThatThrownBy(() -> WinningNumbersParser.parse(input))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageStartingWith(ERROR_MESSAGE);
+                    .hasMessageStartingWith(Constants.ERROR_PREFIX);
         }
 
         @ParameterizedTest(name = "비어있는 입력: \"{0}\"")
@@ -72,7 +72,7 @@ class WinningNumbersParserTest {
         void empty_input(String input) {
             assertThatThrownBy(() -> WinningNumbersParser.parse(input))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageStartingWith(ERROR_MESSAGE);
+                    .hasMessageStartingWith(Constants.ERROR_PREFIX);
         }
     }
 }

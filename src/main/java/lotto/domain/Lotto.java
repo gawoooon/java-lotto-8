@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lotto.constant.ErrorMessage;
+import lotto.constant.Constants;
 
 public class Lotto {
     private final List<Integer> numbers;
@@ -16,15 +17,16 @@ public class Lotto {
     }
 
     private void validate(List<Integer> numbers) {
-        if (numbers.size() != 6) {
+        if (numbers.size() != Constants.LOTTO_NUMBER_COUNT) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_LOTTO_SIZE.getMessage());
         }
 
-        if (numbers.stream().distinct().count() != 6) {
+        if (numbers.stream().distinct().count() != Constants.LOTTO_NUMBER_COUNT) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_LOTTO_DUPLICATE.getMessage());
         }
 
-        boolean invalidRange = numbers.stream().anyMatch(n -> n < 1 || n > 45);
+        boolean invalidRange = numbers.stream()
+                .anyMatch(n -> n < Constants.LOTTO_MIN_NUMBER || n > Constants.LOTTO_MAX_NUMBER);
         if (invalidRange) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_LOTTO_NUMBER_RANGE.getMessage());
         }

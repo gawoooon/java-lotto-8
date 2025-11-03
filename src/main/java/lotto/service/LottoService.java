@@ -4,6 +4,7 @@ import camp.nextstep.edu.missionutils.Randoms;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+import lotto.constant.Constants;
 import lotto.constant.Rank;
 import lotto.domain.Lotto;
 
@@ -14,11 +15,12 @@ import lotto.dto.LottoResultDTO;
 public class LottoService {
 
     public List<Lotto> createLottos(int purchaseAmount) {
-        int count = purchaseAmount / 1000;
+        int count = purchaseAmount / Constants.LOTTO_PRICE;
         List<Lotto> result = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-            List<Integer> numbers = Randoms.pickUniqueNumbersInRange(1, 45, 6);
+            List<Integer> numbers = Randoms.pickUniqueNumbersInRange(Constants.LOTTO_MIN_NUMBER,
+                    Constants.LOTTO_MAX_NUMBER, Constants.LOTTO_NUMBER_COUNT);
             result.add(new Lotto(numbers));
         }
 

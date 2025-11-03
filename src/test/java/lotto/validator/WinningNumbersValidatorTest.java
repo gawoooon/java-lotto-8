@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
+import lotto.constant.Constants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,7 @@ class WinningNumbersValidatorTest {
     void size_must_be_six() {
         assertThatThrownBy(() -> WinningNumbersValidator.validate(List.of(1, 2, 3, 4, 5)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageStartingWith("[ERROR]");
+                .hasMessageStartingWith(Constants.ERROR_PREFIX);
     }
 
     @Test
@@ -29,11 +30,11 @@ class WinningNumbersValidatorTest {
     void out_of_range_is_error() {
         assertThatThrownBy(() -> WinningNumbersValidator.validate(List.of(0, 2, 3, 4, 5, 6)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageStartingWith("[ERROR]");
+                .hasMessageStartingWith(Constants.ERROR_PREFIX);
 
         assertThatThrownBy(() -> WinningNumbersValidator.validate(List.of(1, 2, 3, 4, 5, 46)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageStartingWith("[ERROR]");
+                .hasMessageStartingWith(Constants.ERROR_PREFIX);
     }
 
     @Test
@@ -41,6 +42,6 @@ class WinningNumbersValidatorTest {
     void duplicate_is_error() {
         assertThatThrownBy(() -> WinningNumbersValidator.validate(List.of(1, 1, 2, 3, 4, 5)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageStartingWith("[ERROR]");
+                .hasMessageStartingWith(Constants.ERROR_PREFIX);
     }
 }

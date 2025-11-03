@@ -2,23 +2,25 @@ package lotto.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import lotto.constant.Constants;
 import lotto.constant.ErrorMessage;
 
 public final class WinningNumbersParser {
 
-    private WinningNumbersParser() {
-    }
+    public static final String COMMA = ",";
+
+    private WinningNumbersParser() {}
 
     public static List<Integer> parse(String raw) {
         String input = trim(raw);
         ensureNotEmpty(input);
         ensureNoInnerWhitespace(input);
 
-        String[] tokens = input.split(",", -1);
+        String[] tokens = input.split(COMMA, -1);
         ensureSixTokens(tokens);
         ensureNoEmptyToken(tokens);
 
-        List<Integer> numbers = new ArrayList<>(6);
+        List<Integer> numbers = new ArrayList<>(Constants.WINNING_NUMBER_COUNT);
         for (String t : tokens) {
             ensureDigitsOnly(t);
             numbers.add(Integer.parseInt(t));
@@ -46,7 +48,7 @@ public final class WinningNumbersParser {
     }
 
     private static void ensureSixTokens(String[] tokens) {
-        if (tokens.length != 6) {
+        if (tokens.length != Constants.WINNING_NUMBER_COUNT) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_WINNING_NUMBER_COUNT.getMessage());
         }
     }
