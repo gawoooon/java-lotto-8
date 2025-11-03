@@ -28,10 +28,10 @@ public class OutputView {
         printBlankLine();
         printPurchaseMessage(lottos.size());
         lottos.forEach(lotto -> System.out.println(lotto));
-        printBlankLine();
     }
 
     public void printStatistics(LottoStatisticsDTO dto) {
+        printBlankLine();
         System.out.println(STATISTICS_HEADER);
         PRINT_ORDER.forEach(rank ->
                 System.out.println(RANK_MESSAGES.get(rank) + " - " + dto.getCount(rank) + "개")
