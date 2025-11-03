@@ -36,8 +36,7 @@ public class LottoController {
         while (true) {
             try {
                 String moneyInput = inputView.readMoney();
-                MoneyValidator.validate(moneyInput);
-                return Integer.parseInt(moneyInput);
+                return MoneyValidator.validate(moneyInput);
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
