@@ -7,7 +7,7 @@ import lotto.constant.Rank;
 import lotto.domain.Lotto;
 import lotto.dto.LottoResultDTO;
 import lotto.dto.LottoStatisticsDTO;
-import lotto.util.BonusNumberParser;
+import lotto.util.NumbericInputParser;
 import lotto.util.WinningNumbersParser;
 import lotto.service.LottoService;
 import lotto.validator.BonusNumberValidator;
@@ -36,7 +36,8 @@ public class LottoController {
         while (true) {
             try {
                 String moneyInput = inputView.readMoney();
-                return MoneyValidator.validate(moneyInput);
+                int money = NumbericInputParser.parse(moneyInput);
+                return MoneyValidator.validate(money);
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
@@ -66,7 +67,7 @@ public class LottoController {
         while (true) {
             try {
                 String input = inputView.readBonusNumber();
-                int bonus = BonusNumberParser.parse(input);
+                int bonus = NumbericInputParser.parse(input);
                 BonusNumberValidator.validate(bonus, winningNumbers);
                 return bonus;
             } catch (IllegalArgumentException e) {

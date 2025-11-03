@@ -2,9 +2,9 @@ package lotto.util;
 
 import lotto.constant.ErrorMessage;
 
-public final class BonusNumberParser {
+public final class NumbericInputParser {
 
-    private BonusNumberParser() {}
+    private NumbericInputParser() {}
 
     public static int parse(String raw) {
         String input = trim(raw);
