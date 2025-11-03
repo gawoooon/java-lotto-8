@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.stream.Stream;
 
+import lotto.constant.Constants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,7 +40,8 @@ class MoneyValidatorTest {
         @ValueSource(strings = {"", " ", "   "})
         void empty_input(String input) {
             assertThatThrownBy(() -> MoneyValidator.validate(input))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageStartingWith(Constants.ERROR_PREFIX);
         }
 
         @ParameterizedTest(name = "숫자가 아닌 문자 포함: \"{0}\"")
@@ -50,7 +52,8 @@ class MoneyValidatorTest {
         })
         void contains_non_digit(String input) {
             assertThatThrownBy(() -> MoneyValidator.validate(input))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageStartingWith(Constants.ERROR_PREFIX);
         }
 
         @ParameterizedTest(name = "내부 공백: \"{0}\"")
@@ -59,7 +62,8 @@ class MoneyValidatorTest {
         })
         void contains_space_inside(String input) {
             assertThatThrownBy(() -> MoneyValidator.validate(input))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageStartingWith(Constants.ERROR_PREFIX);
         }
     }
 
@@ -71,21 +75,24 @@ class MoneyValidatorTest {
         @ValueSource(strings = {"0", "0000"})
         void zero_or_negative(String input) {
             assertThatThrownBy(() -> MoneyValidator.validate(input))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageStartingWith(Constants.ERROR_PREFIX);
         }
 
         @ParameterizedTest(name = "1000 단위 아님: \"{0}\"")
         @ValueSource(strings = {"1500", "999", "123", "2500"})
         void not_thousand_unit(String input) {
             assertThatThrownBy(() -> MoneyValidator.validate(input))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageStartingWith(Constants.ERROR_PREFIX);
         }
 
         @ParameterizedTest(name = "Integer 범위 초과: \"{0}\"")
         @MethodSource("lotto.validator.MoneyValidatorTest#overflowSamples")
         void overflow(String input) {
             assertThatThrownBy(() -> MoneyValidator.validate(input))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageStartingWith(Constants.ERROR_PREFIX);
         }
     }
 

@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
+import lotto.constant.Constants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class BonusNumberValidatorTest {
-    private static final String ERROR_MESSAGE = "[ERROR]";
 
     @Test
     @DisplayName("정상: 1~45 범위, 당첨 6개와 중복 없음")
@@ -24,12 +24,12 @@ class BonusNumberValidatorTest {
         assertThatThrownBy(() ->
                 BonusNumberValidator.validate(0, List.of(1, 2, 3, 4, 5, 6))
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageStartingWith(ERROR_MESSAGE);
+                .hasMessageStartingWith(Constants.ERROR_PREFIX);
 
         assertThatThrownBy(() ->
                 BonusNumberValidator.validate(46, List.of(1, 2, 3, 4, 5, 6))
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageStartingWith(ERROR_MESSAGE);
+                .hasMessageStartingWith(Constants.ERROR_PREFIX);
     }
 
     @Test
@@ -38,6 +38,6 @@ class BonusNumberValidatorTest {
         assertThatThrownBy(() ->
                 BonusNumberValidator.validate(6, List.of(1, 2, 3, 4, 5, 6))
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageStartingWith(ERROR_MESSAGE);
+                .hasMessageStartingWith(Constants.ERROR_PREFIX);
     }
 }
