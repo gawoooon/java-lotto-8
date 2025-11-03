@@ -2,6 +2,8 @@ package lotto.service;
 
 import camp.nextstep.edu.missionutils.Randoms;
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
 import lotto.constant.Rank;
 import lotto.domain.Lotto;
 
@@ -32,13 +34,32 @@ public class LottoService {
 
         return new LottoResultDTO(matchCount, bonusMatched);
     }
-    
-    public double calculateProfitRate(List<Rank> ranks, int purchaseAmount) {
-        long totalPrize = ranks.stream()
-                .mapToLong(Rank::getPrize)
-                .sum();
 
-        double rate = ((double) totalPrize / purchaseAmount) * 100;
+    public Map<Rank, Integer> countRankResults(List<LottoResultDTO> results) {
+        Map<Rank, Integer> resultCount = new EnumMap<>(Rank.class);
+
+        for (Rank rank : Rank.values()) {
+            resultCount.put(rank, 0);
+        }
+
+        for (LottoResultDTO dto : results) {
+            Rank rank = dto.toRank();
+            resultCount.put(rank, resultCount.get(rank) + 1);
+        }
+
+        return resultCount;
+    }
+
+    public double calculateProfitRate(Map<Rank, Integer> rankCount, int purchaseAmount) {
+        long totalPrize = 0;
+
+        for (Map.Entry<Rank, Integer> entry : rankCount.entrySet()) {
+            Rank rank = entry.getKey();
+            int count = entry.getValue();
+            totalPrize += (long) rank.getPrize() * count;
+        }
+
+        double rate = (double) totalPrize / purchaseAmount * 100;
         return Math.round(rate * 10) / 10.0;
     }
 }

@@ -1,5 +1,6 @@
 package lotto.service;
 
+import java.util.Map;
 import lotto.constant.Rank;
 import lotto.domain.Lotto;
 import lotto.dto.LottoResultDTO;
@@ -127,41 +128,124 @@ class LottoServiceTest {
         @Test
         @DisplayName("모두 꽝이면 수익률 0.0%")
         void allNone() {
-            List<Rank> ranks = List.of(Rank.NONE, Rank.NONE, Rank.NONE);
-            double rate = lottoService.calculateProfitRate(ranks, 3000);
+            Map<Rank, Integer> rankCount = Map.of(Rank.NONE, 3);
+            double rate = lottoService.calculateProfitRate(rankCount, 3000);
             assertThat(rate).isEqualTo(0.0);
         }
 
         @Test
         @DisplayName("5등 1개면 수익률 166.7% (5,000 / 3,000)")
         void oneFifth() {
-            List<Rank> ranks = List.of(Rank.FIFTH, Rank.NONE, Rank.NONE);
-            double rate = lottoService.calculateProfitRate(ranks, 3000);
+            Map<Rank, Integer> rankCount = Map.of(Rank.FIFTH, 1);
+            double rate = lottoService.calculateProfitRate(rankCount, 3000);
             assertThat(rate).isEqualTo(166.7);
         }
 
         @Test
-        @DisplayName("1등 1개면 수익률 20000000000.0% (2,000,000,000 / 10,000)")
+        @DisplayName("1등 1개면 수익률 20000000.0% (2,000,000,000 / 10,000)")
         void oneFirst() {
-            List<Rank> ranks = List.of(Rank.FIRST);
-            double rate = lottoService.calculateProfitRate(ranks, 10_000);
-            assertThat(rate).isEqualTo(20_000_00000.0 / 100); // 20000000.0%
+            Map<Rank, Integer> rankCount = Map.of(Rank.FIRST, 1);
+            double rate = lottoService.calculateProfitRate(rankCount, 10_000);
+            assertThat(rate).isEqualTo(20_000_000.0);
         }
 
         @Test
         @DisplayName("5등 1개, 4등 1개, 3등 1개, 구입금액 8000 → 19437.5%")
         void mixedRanks() {
-            List<Rank> ranks = List.of(Rank.FIFTH, Rank.FOURTH, Rank.THIRD);
-            double rate = lottoService.calculateProfitRate(ranks, 8000);
+            Map<Rank, Integer> rankCount = Map.of(
+                    Rank.FIFTH, 1,
+                    Rank.FOURTH, 1,
+                    Rank.THIRD, 1
+            );
+            double rate = lottoService.calculateProfitRate(rankCount, 8000);
             assertThat(rate).isEqualTo(19_437.5);
         }
 
         @Test
         @DisplayName("소수점 둘째 자리에서 반올림하여 첫째 자리까지 표시")
         void roundingToOneDecimal() {
-            List<Rank> ranks = List.of(Rank.FIFTH);
-            double rate = lottoService.calculateProfitRate(ranks, 3001);
+            Map<Rank, Integer> rankCount = Map.of(Rank.FIFTH, 1);
+            double rate = lottoService.calculateProfitRate(rankCount, 3001);
             assertThat(rate).isEqualTo(166.6);
+        }
+    }
+
+    @Nested
+    @DisplayName("등수 카운트 테스트")
+    class CountRankResults {
+
+        @Test
+        @DisplayName("결과가 없으면 모든 랭크가 0개")
+        void emptyResults() {
+            List<LottoResultDTO> results = List.of();
+
+            Map<Rank, Integer> rankCount = lottoService.countRankResults(results);
+
+            for (Rank rank : Rank.values()) {
+                assertThat(rankCount.get(rank)).isEqualTo(0);
+            }
+        }
+
+        @Test
+        @DisplayName("NONE만 3개")
+        void onlyNone() {
+            List<LottoResultDTO> results = List.of(
+                    new LottoResultDTO(0, false),
+                    new LottoResultDTO(0, false),
+                    new LottoResultDTO(0, false)
+            );
+
+            Map<Rank, Integer> rankCount = lottoService.countRankResults(results);
+
+            assertThat(rankCount.get(Rank.NONE)).isEqualTo(3);
+            assertThat(rankCount.get(Rank.FIFTH)).isEqualTo(0);
+            assertThat(rankCount.get(Rank.FOURTH)).isEqualTo(0);
+            assertThat(rankCount.get(Rank.THIRD)).isEqualTo(0);
+            assertThat(rankCount.get(Rank.SECOND)).isEqualTo(0);
+            assertThat(rankCount.get(Rank.FIRST)).isEqualTo(0);
+        }
+
+        @Test
+        @DisplayName("각 등수가 하나씩 존재")
+        void oneEachRank() {
+            List<LottoResultDTO> results = List.of(
+                    new LottoResultDTO(6, false), // FIRST
+                    new LottoResultDTO(5, true),  // SECOND
+                    new LottoResultDTO(5, false), // THIRD
+                    new LottoResultDTO(4, false), // FOURTH
+                    new LottoResultDTO(3, false), // FIFTH
+                    new LottoResultDTO(2, false)  // NONE
+            );
+
+            Map<Rank, Integer> rankCount = lottoService.countRankResults(results);
+
+            assertThat(rankCount.get(Rank.FIRST)).isEqualTo(1);
+            assertThat(rankCount.get(Rank.SECOND)).isEqualTo(1);
+            assertThat(rankCount.get(Rank.THIRD)).isEqualTo(1);
+            assertThat(rankCount.get(Rank.FOURTH)).isEqualTo(1);
+            assertThat(rankCount.get(Rank.FIFTH)).isEqualTo(1);
+            assertThat(rankCount.get(Rank.NONE)).isEqualTo(1);
+        }
+
+        @Test
+        @DisplayName("5등 3개, 3등 2개, 나머지 0개")
+        void mixedCounts() {
+            List<LottoResultDTO> results = List.of(
+                    new LottoResultDTO(3, false),
+                    new LottoResultDTO(3, false),
+                    new LottoResultDTO(3, false), // 5등 3개
+                    new LottoResultDTO(5, false),
+                    new LottoResultDTO(5, false) // 3등 2개
+            );
+
+            Map<Rank, Integer> rankCount = lottoService.countRankResults(results);
+
+            assertThat(rankCount.get(Rank.FIFTH)).isEqualTo(3);
+            assertThat(rankCount.get(Rank.THIRD)).isEqualTo(2);
+            assertThat(rankCount.get(Rank.FIRST)).isEqualTo(0);
+            assertThat(rankCount.get(Rank.SECOND)).isEqualTo(0);
+            assertThat(rankCount.get(Rank.FOURTH)).isEqualTo(0);
+            assertThat(rankCount.get(Rank.NONE)).isEqualTo(0);
         }
     }
 }
