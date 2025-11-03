@@ -7,7 +7,12 @@ public enum ErrorMessage {
     INVALID_EMPTY_INPUT("입력이 비어있습니다."),
     INVALID_NEGATIVE_OR_ZERO("값은 0보다 커야 합니다."),
     INVALID_THOUSAND_UNIT("구입 금액은 1000 단위여야 합니다."),
-    INVALID_RANGE("값이 허용 범위를 벗어났습니다.");
+    INVALID_RANGE("값이 허용 범위를 벗어났습니다."),
+
+    INVALID_LOTTO_SIZE("로또 번호는 6개여야 합니다."),
+    INVALID_LOTTO_NUMBER_RANGE("로또 번호는 1~45 범위여야 합니다."),
+    INVALID_LOTTO_DUPLICATE("로또 번호는 중복될 수 없습니다.");
+
 
     private final String message;
 
