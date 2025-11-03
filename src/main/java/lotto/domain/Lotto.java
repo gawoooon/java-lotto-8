@@ -1,5 +1,7 @@
 package lotto.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lotto.constant.ErrorMessage;
 
@@ -8,7 +10,9 @@ public class Lotto {
 
     public Lotto(List<Integer> numbers) {
         validate(numbers);
-        this.numbers = numbers;
+        List<Integer> copy = new ArrayList<>(numbers);
+        Collections.sort(copy);
+        this.numbers = Collections.unmodifiableList(copy);
     }
 
     private void validate(List<Integer> numbers) {
@@ -28,5 +32,10 @@ public class Lotto {
 
     public List<Integer> getNumbers() {
         return numbers;
+    }
+
+    @Override
+    public String toString() {
+        return numbers.toString();
     }
 }
