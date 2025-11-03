@@ -2,6 +2,7 @@ package lotto.service;
 
 import camp.nextstep.edu.missionutils.Randoms;
 import java.util.Collections;
+import lotto.constant.Rank;
 import lotto.domain.Lotto;
 
 import java.util.ArrayList;
@@ -31,5 +32,14 @@ public class LottoService {
         boolean bonusMatched = lotto.getNumbers().contains(bonusNumber);
 
         return new LottoResultDTO(matchCount, bonusMatched);
+    }
+    
+    public double calculateProfitRate(List<Rank> ranks, int purchaseAmount) {
+        long totalPrize = ranks.stream()
+                .mapToLong(Rank::getPrize)
+                .sum();
+
+        double rate = ((double) totalPrize / purchaseAmount) * 100;
+        return Math.round(rate * 10) / 10.0;
     }
 }
